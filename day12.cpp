@@ -21,7 +21,11 @@ vector<pair<int, int>> sd[4];
 // [area, perimeter]
 pair<int, int> dfs(int r, int c, char st, int d) {
     if (v[r][c] != st) {
-        sd[d].push_back({r, c});
+        if (d % 2) {
+            sd[d].push_back({c, r});
+        } else {
+            sd[d].push_back({r, c});
+        }
         return {0, 1};
     }
     if (w[r][c]) return {0, 0};
@@ -53,34 +57,18 @@ main() {
 
             int sides = 0;
             for (int k = 0; k < 4; k++) {
-                if (k % 2 == 0) {
-                    sort(sd[k].begin(), sd[k].end(), 
-                        [](const auto &a, const auto &b) {
-                            if (a.first != b.first) {
-                                return a.first < b.first; 
-                            }
-                            return a.second < b.second;
-                        });
-                    pair<int, int> a = {-1, -1};
-                    for (int l = 0; l < sd[k].size(); l++) {
-                        if (sd[k][l].first != a.first || sd[k][l].second > a.second + 1) sides++;
-                        a = sd[k][l];
-                    }
-                } else {
-                    sort(sd[k].begin(), sd[k].end(), 
-                        [](const auto &a, const auto &b) {
-                            if (a.second != b.second) {
-                                return a.second < b.second; 
-                            }
-                            return a.first < b.first;
-                        });
-                    pair<int, int> a = {-1, -1};
-                    for (int l = 0; l < sd[k].size(); l++) {
-                        if (sd[k][l].second != a.second || sd[k][l].first > a.first + 1) sides++;
-                        a = sd[k][l];
-                    }
+                sort(sd[k].begin(), sd[k].end(), 
+                    [](const auto &a, const auto &b) {
+                        if (a.first != b.first) {
+                            return a.first < b.first; 
+                        }
+                        return a.second < b.second;
+                    });
+                pair<int, int> a = {-1, -1};
+                for (int l = 0; l < sd[k].size(); l++) {
+                    if (sd[k][l].first != a.first || sd[k][l].second > a.second + 1) sides++;
+                    a = sd[k][l];
                 }
-                
             }
             sum2 += res.first * sides;
         }
